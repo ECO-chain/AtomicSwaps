@@ -41,7 +41,7 @@ contract EcocAtomicSwap {
   }
 
   modifier onlyExpirableSwaps(bytes32 _AtomicSwapID) {
-    require (block.number >= swaps[_AtomicSwapID].blockNumber + 1000);
+    require (block.number >= swaps[_AtomicSwapID].blockNumber + 100);
     _;
   }
 
@@ -79,18 +79,6 @@ contract EcocAtomicSwap {
 
     // Trigger close event.
     Close(_AtomicSwapID, _secretKey);
-  }
-
-  function expire(bytes32 _AtomicSwapID) public onlyOpenSwaps(_AtomicSwapID) onlyExpirableSwaps(_AtomicSwapID) {
-    // Expire the swap.
-    Swap memory swap = swaps[_AtomicSwapID];
-    swapStates[_AtomicSwapID] = States.EXPIRED;
-
-    // Transfer the ETH value from this contract back to the ETH trader.
-    swap.senderAddress.transfer(swap.value);
-
-     // Trigger expire event.
-    Expire(_AtomicSwapID);
   }
 
   function check(bytes32 _AtomicSwapID) public view returns (uint256 timelock, uint256 value, address receiverAddress, bytes32 SHA3Hash) {
