@@ -1,10 +1,11 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.18;
 
 contract EthAtomicSwap {
 
   struct Swap {
     address senderAddress;
     address receiverAddress;
+    uint256 timelock;
     uint256 value;
     uint256 blockNumber;
     bytes32 SHA3Hash;
@@ -47,7 +48,7 @@ contract EthAtomicSwap {
 
   modifier onlyWithSecretKey(bytes32 _AtomicSwapID, bytes _secretKey) {
     // TODO: Require _secretKey length to conform to the spec
-    require (swaps[_AtomicSwapID].SHA3Hash == sha3(_secretKey));
+    require (swaps[_AtomicSwapID].SHA3Hash == keccak256(_secretKey));
     _;
   }
 
@@ -56,6 +57,7 @@ contract EthAtomicSwap {
     Swap memory swap = Swap({
       senderAddress: msg.sender,
       receiverAddress: _receiverAddress,
+      timelock: _blockNumber,
       value: msg.value,
       blockNumber: _blockNumber,
       SHA3Hash: _SHA3Hash,
