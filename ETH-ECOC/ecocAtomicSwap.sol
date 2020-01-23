@@ -74,20 +74,15 @@ contract EcocAtomicSwap {
     swaps[_AtomicSwapID].secretKey = _secretKey;
     swapStates[_AtomicSwapID] = States.CLOSED;
 
-    // Transfer the ETH funds from this contract to the withdrawing trader.
+    // Transfer the ECO funds from this contract to the withdrawing trader.
     swap.receiverAddress.transfer(swap.value);
 
     // Trigger close event.
     Close(_AtomicSwapID, _secretKey);
   }
 
-  function check(bytes32 _AtomicSwapID) public view returns (uint256 timelock, uint256 value, address receiverAddress, bytes32 SHA3Hash) {
+  function check(bytes32 _AtomicSwapID) public view returns (uint256 timelock, uint256 value, address receiverAddress, bytes32 SHA3Hash, bytes secretKey) {
     Swap memory swap = swaps[_AtomicSwapID];
-    return (swap.timelock, swap.value, swap.receiverAddress, swap.SHA3Hash);
-  }
-
-  function checkSecretKey(bytes32 _AtomicSwapID) public view onlyClosedSwaps(_AtomicSwapID) returns (bytes secretKey) {
-    Swap memory swap = swaps[_AtomicSwapID];
-    return swap.secretKey;
+    return (swap.timelock, swap.value, swap.receiverAddress, swap.SHA3Hash, swap.secretKey);
   }
 }
