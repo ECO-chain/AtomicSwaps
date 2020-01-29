@@ -1,0 +1,22 @@
+{
+  "name": "crosschain-tools",
+  "version": "1.0.0",
+  "description": "CLI support for interoperability",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ECO-chain/AtomicSwaps.git"
+  },
+  "author": "akis",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/ECO-chain/AtomicSwaps/issues"
+  },
+  "homepage": "https://github.com/ECO-chain/AtomicSwaps#readme",
+  "dependencies": {
+    "web3": "^1.2.5"
+  }
+}
