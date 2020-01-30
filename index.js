@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Web3 = require("web3");
 const { Ecocw3 } = require("ecoweb3");
+const ecoc_utils = require("./ecoc/utils.js");
 
 const ETH = {
   ADDR: process.env.ETH_ADDR,
@@ -25,10 +26,7 @@ eth_web3.eth.net.isListening().then(results => {
   console.log("connected to Infura: " + results);
 });
 
-async function isConnected() {
-  return await ecoc_web3.isConnected();
-}
-
-isConnected().then(results => {
+//isConnected().then(results => {
+ecoc_utils.isConnected().then(results => {
   console.log("connected to ecochain node: " + results);
 });
