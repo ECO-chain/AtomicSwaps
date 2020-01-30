@@ -1,11 +1,11 @@
-require("dotenv").config();
+require("dotenv").config({ path: '../.env' });
 const { Ecocw3 } = require("ecoweb3");
 const ECOC = {
     ADDR: process.env.ECOC_ADDR,
     PRIV_KEY: process.env.ECOC_PRIV_KEY,
     ENDPOINT: process.env.ECOCNODE_ENDPOINT
   };
-  const ecocw3 = Ecocw3.Rpc(ECOC.ENDPOINT);
+const ecocw3 = Ecocw3.Rpc(ECOC.ENDPOINT);
 
 
 async function getBlockCount() {
