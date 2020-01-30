@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/ECO-chain/AtomicSwaps#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
+    "ecoweb3": "^1.1.0-rc1",
+    "mocha": "^7.0.1",
     "web3": "^1.2.5"
   }
 }
