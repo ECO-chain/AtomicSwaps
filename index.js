@@ -26,7 +26,13 @@ eth_web3.eth.net.isListening().then(results => {
   console.log("connected to Infura: " + results);
 });
 
-//isConnected().then(results => {
 ecoc_utils.isConnected().then(results => {
   console.log("connected to ecochain node: " + results);
+});
+
+var height;
+
+ecoc_utils.getBlockCount().then(results  => {
+    height = results;
+    console.log('current height: '+height)
 });
