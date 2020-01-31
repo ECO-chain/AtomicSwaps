@@ -149,4 +149,30 @@ const contract_abi = [
 ];
 
 const contract = ecocw3.Contract(ECOC.CONTRACT_ADDR, contract_abi);
-console.log(contract);
+async function call_check(AtomicSwapID) {
+  var params = {
+    methodArgs: [AtomicSwapID],
+    senderAddress: ECOC.ADDR
+  };
+  return await contract.call("check", params);
+}
+
+function wrap_call_check(AtomicSwapID) {
+  call_check(AtomicSwapID)
+    .then(results => {
+      r = {
+        timelock: results.executionResult.formattedOutput.timelock,
+        value: results.executionResult.formattedOutput.value,
+        receiverAddress:
+          results.executionResult.formattedOutput.receiverAddress,
+        SHA3Hash: results.executionResult.formattedOutput.SHA3Hash,
+        secretKey: results.executionResult.formattedOutput.secretKey
+      };
+      console.log(r);
+
+      return r;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
