@@ -53,21 +53,23 @@ contract EcoAtomicSwap {
   }
 
   function open(bytes32 _AtomicSwapID, address _receiverAddress, bytes32 _SHA3Hash, uint256 _blockNumber) public onlyInvalidSwaps(_AtomicSwapID) payable {
-    // Store the details of the swap.
-    Swap memory swap = Swap({
-      senderAddress: msg.sender,
-      receiverAddress: _receiverAddress,
-      timelock: _blockNumber,
-      value: msg.value,
-      blockNumber: _blockNumber,
-      SHA3Hash: _SHA3Hash,
-      secretKey: new bytes(0)
-    });
-    swaps[_AtomicSwapID] = swap;
-    swapStates[_AtomicSwapID] = States.OPEN;
+    if(msg.value > 0){
+      // Store the details of the swap.
+      Swap memory swap = Swap({
+        senderAddress: msg.sender,
+        receiverAddress: _receiverAddress,
+        timelock: _blockNumber,
+        value: msg.value,
+        blockNumber: _blockNumber,
+        SHA3Hash: _SHA3Hash,
+        secretKey: new bytes(0)
+      });
+      swaps[_AtomicSwapID] = swap;
+      swapStates[_AtomicSwapID] = States.OPEN;
 
-    // Trigger open event.
-    Open(_AtomicSwapID, _receiverAddress, _SHA3Hash);
+      // Trigger open event.
+      Open(_AtomicSwapID, _receiverAddress, _SHA3Hash);
+    }
   }
 
   function close(bytes32 _AtomicSwapID, bytes _secretKey) public onlyOpenSwaps(_AtomicSwapID) onlyWithSecretKey(_AtomicSwapID, _secretKey) {
