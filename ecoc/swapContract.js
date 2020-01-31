@@ -1,11 +1,14 @@
 require("dotenv").config({ path: "../.env" });
+const utils = require('./utils.js')
+
 const { Ecocw3 } = require("ecoweb3");
 const ECOC = {
   ADDR: process.env.ECOC_ADDR,
   PRIV_KEY: process.env.ECOC_PRIV_KEY,
   ENDPOINT: process.env.ECOCNODE_ENDPOINT,
   NET: process.env.CHAIN_MODE,
-  CONTRACT_ADDR: process.env.ECOC_SMARTCONTRACT
+  CONTRACT_ADDR: process.env.ECOC_SMARTCONTRACT,
+  RECEIVERS_ADDR: process.env.ECOC_RECEIVER_ADDR
 };
 
 config = {
@@ -14,6 +17,7 @@ config = {
 };
 
 const ecocw3 = new Ecocw3(config);
+const rpc = Ecocw3.Rpc(ECOC.ENDPOINT);
 
 const contract_abi = [
   {
@@ -149,22 +153,22 @@ const contract_abi = [
 ];
 
 const contract = ecocw3.Contract(ECOC.CONTRACT_ADDR, contract_abi);
-async function call_check(AtomicSwapID) {
+async function call_check(atomic_swap_ID) {
   var params = {
-    methodArgs: [AtomicSwapID],
+    methodArgs: [atomic_swap_ID],
     senderAddress: ECOC.ADDR
   };
   return await contract.call("check", params);
 }
 
-function wrap_call_check(AtomicSwapID) {
-  call_check(AtomicSwapID)
+/* wrapper example */
+function wrap_call_check(atomic_swap_ID) {
+  call_check(atomic_swap_ID)
     .then(results => {
       r = {
         timelock: results.executionResult.formattedOutput.timelock,
         value: results.executionResult.formattedOutput.value,
-        receiverAddress:
-          results.executionResult.formattedOutput.receiverAddress,
+        receiverAddress: utils.hex_to_ecoc_addr(results.executionResult.formattedOutput.receiverAddress),
         SHA3Hash: results.executionResult.formattedOutput.SHA3Hash,
         secretKey: results.executionResult.formattedOutput.secretKey
       };
@@ -175,4 +179,16 @@ function wrap_call_check(AtomicSwapID) {
     .catch(error => {
       console.log(error);
     });
+}
+
+async function send_open(atomic_swap_ID, receiver_addr , SHA3_hash, block_timelock, ecoc_amount, gas_limit=250000 , gas_price=0.0000004) {
+  var params = { 
+    'methodArgs': [atomic_swap_ID, receiver_addr , SHA3_hash, block_timelock],
+    'amount': ecoc_amount,
+    'gasLimit': gas_limit,
+    'gasPrice': gas_price,
+    'senderAddress' : ECOC.ADDR
+  };
+
+  return await contract.send("open", params);
 }
