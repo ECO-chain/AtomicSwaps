@@ -192,3 +192,16 @@ async function send_open(atomic_swap_ID, receiver_addr , SHA3_hash, block_timelo
 
   return await contract.send("open", params);
 }
+
+flag = /*true */ false
+if (flag){
+send_open("9",ECOC.RECEIVERS_ADDR,
+"c2fa01ea683b29659548efe5cc00ad27b9cc419b5ff0a6448cd469a1c4a23e1f",
+400000, 0.0001).then(results => {
+  console.log(results);
+})
+.catch(error => {
+  console.log(error);
+});
+}
+wrap_call_check("5")
