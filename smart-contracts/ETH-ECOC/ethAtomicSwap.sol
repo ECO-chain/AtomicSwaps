@@ -8,7 +8,7 @@ contract EthAtomicSwap {
     uint256 timelock;
     uint256 value;
     uint256 blockNumber;
-    bytes32 SHA3Hash;
+    bytes64 SHA3Hash;
     bytes secretKey;
   }
 
@@ -22,7 +22,7 @@ contract EthAtomicSwap {
   mapping (bytes32 => Swap) private swaps;
   mapping (bytes32 => States) private swapStates;
 
-  event Open(bytes32 _AtomicSwapID, address _receiverAddress,bytes32 _SHA3Hash);
+  event Open(bytes32 _AtomicSwapID, address _receiverAddress,bytes64 _SHA3Hash);
   event Expire(bytes32 _AtomicSwapID);
   event Close(bytes32 _AtomicSwapID, bytes _secretKey);
 
@@ -52,7 +52,7 @@ contract EthAtomicSwap {
     _;
   }
 
-  function open(bytes32 _AtomicSwapID, address _receiverAddress, bytes32 _SHA3Hash, uint256 _blockNumber) public onlyInvalidSwaps(_AtomicSwapID) payable {
+  function open(bytes32 _AtomicSwapID, address _receiverAddress, bytes64 _SHA3Hash, uint256 _blockNumber) public onlyInvalidSwaps(_AtomicSwapID) payable {
     if(msg.value > 0){
       // Store the details of the swap.
       Swap memory swap = Swap({
@@ -85,7 +85,7 @@ contract EthAtomicSwap {
     Close(_AtomicSwapID, _secretKey);
   }
 
-  function check(bytes32 _AtomicSwapID) public view returns (uint256 timelock, uint256 value, address receiverAddress, bytes32 SHA3Hash, bytes secretKey) {
+  function check(bytes32 _AtomicSwapID) public view returns (uint256 timelock, uint256 value, address receiverAddress, bytes64 SHA3Hash, bytes secretKey) {
     Swap memory swap = swaps[_AtomicSwapID];
     return (swap.timelock, swap.value, swap.receiverAddress, swap.SHA3Hash, swap.secretKey);
   }

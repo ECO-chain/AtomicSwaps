@@ -1,0 +1,5 @@
+receiversSignature receiversPublicKey secret
+OP_SIZE secretSize OP_EQUALVERIFY
+OP_SHA256 secretHash OP_EQUALVERIFY
+OP_DUP OP_HASH160 receiversPublicKeyHash
+OP_EQUALVERIFY OP_CHECKSIG
