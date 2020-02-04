@@ -1,5 +1,5 @@
 require("dotenv").config({ path: "../.env" });
-const utils = require('./utils.js')
+const utils = require("./utils.js");
 
 const { Ecocw3 } = require("ecoweb3");
 const ECOC = {
@@ -168,40 +168,41 @@ function wrap_call_check(atomic_swap_ID) {
       r = {
         timelock: results.executionResult.formattedOutput.timelock,
         value: results.executionResult.formattedOutput.value,
-        receiverAddress: utils.hex_to_ecoc_addr(results.executionResult.formattedOutput.receiverAddress),
-        SHA3Hash: results.executionResult.formattedOutput.SHA3Hash,
+        receiverAddress: utils.hex_to_ecoc_addr(
+          results.executionResult.formattedOutput.receiverAddress
+        ),
+        SHA3Hash: Buffer.from(results.executionResult.formattedOutput.SHA3Hash).toString(),
         secretKey: results.executionResult.formattedOutput.secretKey
       };
       console.log(r);
-
-      return r;
+        return r;
     })
     .catch(error => {
       console.log(error);
     });
 }
 
-async function send_open(atomic_swap_ID, receiver_addr , SHA3_hash, block_timelock, ecoc_amount, gas_limit=250000 , gas_price=0.0000004) {
-  var params = { 
-    'methodArgs': [atomic_swap_ID, receiver_addr , SHA3_hash, block_timelock],
-    'amount': ecoc_amount,
-    'gasLimit': gas_limit,
-    'gasPrice': gas_price,
-    'senderAddress' : ECOC.ADDR
+async function send_open(
+  atomic_swap_ID,
+  receiver_addr,
+  SHA3_hash,
+  block_timelock,
+  ecoc_amount,
+  gas_limit = 250000,
+  gas_price = 0.0000004
+) {
+  var params = {
+    methodArgs: [atomic_swap_ID, receiver_addr, SHA3_hash, block_timelock],
+    amount: ecoc_amount,
+    gasLimit: gas_limit,
+    gasPrice: gas_price,
+    senderAddress: ECOC.ADDR
   };
 
   return await contract.send("open", params);
 }
 
-flag = /*true */ false
-if (flag){
-send_open("9",ECOC.RECEIVERS_ADDR,
-"c2fa01ea683b29659548efe5cc00ad27b9cc419b5ff0a6448cd469a1c4a23e1f",
-400000, 0.0001).then(results => {
-  console.log(results);
-})
-.catch(error => {
-  console.log(error);
-});
-}
-wrap_call_check("5")
+module.exports = {
+  ecoc_open_swap : send_open,
+  ecoc_check_swap : wrap_call_check,
+};
