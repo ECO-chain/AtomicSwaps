@@ -171,7 +171,7 @@ function wrap_call_check(atomic_swap_ID) {
         receiverAddress: utils.hex_to_ecoc_addr(
           results.executionResult.formattedOutput.receiverAddress
         ),
-        SHA3Hash: Buffer.from(results.executionResult.formattedOutput.SHA3Hash).toString(),
+        HA3Hash: Buffer.from(results.executionResult.formattedOutput.SHA3Hash,'hex').toString(),
         secretKey: results.executionResult.formattedOutput.secretKey
       };
       console.log(r);

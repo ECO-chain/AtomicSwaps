@@ -28,7 +28,8 @@ while (true) {
 console.log("Secret provided and hashed. Keep the secret safe.");
 
 const h_sha3 = crypto.createHash(HASH_ALGO);
-var digest = h_sha3.update(secret).digest("ascii");
+var digest = h_sha3.update(secret).digest("hex");
+var digest_tostring = Buffer.from(digest,'hex').toString()
 
 contract
   .ecoc_open_swap(
