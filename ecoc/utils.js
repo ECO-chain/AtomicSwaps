@@ -1,6 +1,7 @@
 require("dotenv").config({ path: "../.env" });
 const createHash = require("create-hash");
 const bs58 = require("bs58");
+const crypto = require("crypto");
 
 const { Ecocw3 } = require("ecoweb3");
 const ECOC = {
@@ -64,11 +65,46 @@ function hex2Buffer(hexString) {
   return Buffer.from(buffer);
 }
 
+function is_valid_addr(address, net = "mainnet") {
+  console.log("Address to test: " + address);
+  if (net.toLowerCase() == "testnet") {
+    characteristic = "e";
+  } else {
+    characteristic = "E";
+  }
+  if (address[0] != characteristic) {
+    return false;
+  }
+
+  /* decode from base58 */
+  var bytes_addr = bs58.decode(address);
+  /* remove last 4 bytes */
+  var checksum = Buffer.alloc(4);
+  bytes_addr.copy(checksum, 0, bytes_addr.length - 4);
+  checksum = Buffer.from(checksum, "hex").toString();
+  var bytes_nochecksum = Buffer.alloc(bytes_addr.length - 4);
+  bytes_addr.copy(bytes_nochecksum, 0, 0, bytes_addr.length - 4);
+  /* two times hash256*/
+  const h1_sha256 = crypto.createHash("sha256");
+  const h2_sha256 = crypto.createHash("sha256");
+  var first_hash = h1_sha256.update(bytes_nochecksum).digest("");
+  first_hash.copy(first_hash, 0, 0, first_hash.length - 4);
+  var second_hash = h2_sha256.update(first_hash).digest("");
+  var second_hash_buff = Buffer.from(second_hash);
+  var final_checksum = Buffer.alloc(4);
+  second_hash_buff.copy(final_checksum, 0, 0, 4);
+  /* compar the 4 checksum bytes with
+   * the last 4 bytes after the hashing*/
+  is_valid = checksum == final_checksum;
+  return is_valid;
+}
+
 module.exports = {
   getBlockCount: getBlockCount,
   isConnected: isConnected,
   getHexAddress: getHexAddress,
   fromHexAddress: fromHexAddress,
   hex_to_ecoc_addr: hex_to_ecoc_addr,
-  hex2Buffer: hex2Buffer
+  hex2Buffer: hex2Buffer,
+  ecoc_valid_addr: is_valid_addr
 };
