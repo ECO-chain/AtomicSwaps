@@ -1,0 +1,4 @@
+sendersSignature sendersPublicKey
+block OP_CHECKLOCKTIMEVERIFY OP_DROP
+OP_DUP OP_HASH160 sendersPublicKeyHash
+OP_EQUALVERIFY OP_CHECKSIG
