@@ -222,12 +222,6 @@ async function send_close(
 
 module.exports = {
   ecoc_open_swap : send_open,
-  coc_open_close : send_close,
-  ecoc_check_swap : wrap_call_check,
-};
-
-
-module.exports = {
-  ecoc_open_swap : send_open,
+  ecoc_close_swap : send_close,
   ecoc_check_swap : wrap_call_check,
 };
