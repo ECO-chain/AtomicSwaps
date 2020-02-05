@@ -12,3 +12,10 @@ if (!(typeof secret !== "undefined" && secret)) {
 }
 
 /* call the close() function */
+contract.ecoc_close_swap(swap_id, secret)
+  .then(results => {
+    console.log(results);
+  })
+  .catch(error => {
+    console.log(error);
+  });
