@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const contract = require("./swapContract");
+const utils = require("./utils");
 const readlineSync = require("readline-sync");
 
 const HASH_ALGO = "sha3-256";
@@ -29,7 +30,13 @@ console.log("Secret provided and hashed. Keep the secret safe.");
 
 const h_sha3 = crypto.createHash(HASH_ALGO);
 var digest = h_sha3.update(secret).digest("hex");
-var digest_tostring = Buffer.from(digest,'hex').toString()
+
+if (!utils.ecoc_valid_addr(recievers_addr, process.env.CHAIN_MODE)) {
+  console.log(
+    "Wrong reciever's ecochain address. Check the address and net mode."
+  );
+  process.exit();
+}
 
 contract
   .ecoc_open_swap(
