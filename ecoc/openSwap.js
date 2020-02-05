@@ -8,8 +8,8 @@ const DEFAULT_GAS_LIMIT = 250000;
 const DEFAULT_GAS_PRICE = 0.0000004;
 const swap_id = process.argv[2];
 const recievers_addr = process.argv[3];
-const ecoc_amount = process.argv[4];
-const block_timelock = process.argv[5];
+const ecoc_amount = parseFloat(process.argv[4]);
+const block_timelock = parseInt(process.argv[5]);
 const gas_limit = process.argv[6] || DEFAULT_GAS_LIMIT;
 const gas_price = process.argv[7] || DEFAULT_GAS_PRICE;
 
@@ -18,9 +18,9 @@ if (process.argv.length < 6) {
   console.log(
     "openSwap <swap id> <reciever's address> <ECOC amount> <block height timelock> <gas limit(optional)> <gas price(price)>"
   );
-  process.exit();
-}
 
+}
+console.log(typeof(ecoc_amount))
 /* input blocking to get the secret */
 while (true) {
   var secret = readlineSync.question("provide the secret: ");
