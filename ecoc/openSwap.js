@@ -31,6 +31,7 @@ console.log("Secret provided and hashed. Keep the secret safe.");
 const h_sha3 = crypto.createHash(HASH_ALGO);
 var digest = h_sha3.update(secret).digest("hex");
 
+/* check for valid ECOC address*/
 if (!utils.ecoc_valid_addr(recievers_addr, process.env.CHAIN_MODE)) {
   console.log(
     "Wrong reciever's ecochain address. Check the address and net mode."
@@ -38,19 +39,61 @@ if (!utils.ecoc_valid_addr(recievers_addr, process.env.CHAIN_MODE)) {
   process.exit();
 }
 
-contract
-  .ecoc_open_swap(
-    swap_id,
-    recievers_addr,
-    digest,
-    block_timelock,
-    ecoc_amount,
-    gas_limit,
-    gas_price
-  )
-  .then(results => {
-    console.log(results);
+/* check for readonable block timelock*/
+utils
+  .getBlockCount()
+  .then(blockheight => {
+    //console.log(results);
+    const MIN_BLOCK = parseInt(process.env.ECOC_MIN_BLOCK_LOCK);
+
+    if (block_timelock <= blockheight + MIN_BLOCK) {
+      console.log(
+        "For security reasons, please set block time higher than " +
+          (blockheight + MIN_BLOCK) +
+          " (current block " +
+          blockheight +
+          "+" +
+          MIN_BLOCK +
+          ")"
+      );
+      process.exit();
+    }
   })
+  .catch(error => {
+    console.log(error);
+    process.exit();
+  })
+  /* check if wallet holds enough balance */
+  .then(
+    utils.ecoc_wallet_info().then(wallet_info => {
+      var wallet_balance = wallet_info.balance;
+      if (wallet_balance <= ecoc_amount) {
+        console.log(
+          "Not enough ECOC. Wallet balance is " + wallet_balance + " ECOC"
+        );
+        process.exit();
+      }
+    })
+  )
+  .catch(error => {
+    console.log(error);
+    process.exit();
+  })
+  .then(
+    /* open the swap */
+    contract.ecoc_open_swap(
+        swap_id,
+        recievers_addr,
+        digest,
+        block_timelock,
+        ecoc_amount,
+        gas_limit,
+        gas_price
+      )
+      .then(results => {
+        console.log(results);
+      })
+  )
   .catch(error => {
     console.log(error);
   });

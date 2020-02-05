@@ -28,6 +28,15 @@ async function fromHexAddress(addr) {
   return await ecocw3.fromHexAddress(addr);
 }
 
+async function getWalletInfo(addr) {
+  return await ecocw3.getWalletInfo(addr);
+}
+
+async function isConnected() {
+  return await ecocw3.isConnected();
+}
+
+
 function hex_to_ecoc_addr(hex_addr, net = ECOC.NET) {
   var ecoAdress = hex_addr;
   // Add network byte
@@ -66,7 +75,6 @@ function hex2Buffer(hexString) {
 }
 
 function is_valid_addr(address, net = "mainnet") {
-  console.log("Address to test: " + address);
   if (net.toLowerCase() == "testnet") {
     characteristic = "e";
   } else {
@@ -103,8 +111,9 @@ module.exports = {
   getBlockCount: getBlockCount,
   isConnected: isConnected,
   getHexAddress: getHexAddress,
-  fromHexAddress: fromHexAddress,
+  fromHexAddress: fromHexAddress, 
   hex_to_ecoc_addr: hex_to_ecoc_addr,
   hex2Buffer: hex2Buffer,
-  ecoc_valid_addr: is_valid_addr
+  ecoc_valid_addr: is_valid_addr,
+  ecoc_wallet_info : getWalletInfo
 };
