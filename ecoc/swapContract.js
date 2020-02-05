@@ -202,6 +202,31 @@ async function send_open(
   return await contract.send("open", params);
 }
 
+
+async function send_close(
+  atomic_swap_ID,
+  secret,
+  gas_limit = 250000,
+  gas_price = 0.0000004
+) {
+  var params = {
+    methodArgs: [atomic_swap_ID, secret],
+    amount: 0 , /* no ECOC to send*/
+    gasLimit: gas_limit,
+    gasPrice: gas_price,
+    senderAddress: ECOC.ADDR
+  };
+
+  return await contract.send("close", params);
+}
+
+module.exports = {
+  ecoc_open_swap : send_open,
+  coc_open_close : send_close,
+  ecoc_check_swap : wrap_call_check,
+};
+
+
 module.exports = {
   ecoc_open_swap : send_open,
   ecoc_check_swap : wrap_call_check,
