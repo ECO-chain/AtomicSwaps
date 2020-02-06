@@ -116,4 +116,4 @@ module.exports = {
   hex2Buffer: hex2Buffer,
   ecoc_valid_addr: is_valid_addr,
   ecoc_wallet_info : getWalletInfo
-};
+}
