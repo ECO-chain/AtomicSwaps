@@ -23,13 +23,13 @@ if (process.argv.length < 6) {
 console.log(typeof(ecoc_amount))
 /* input blocking to get the secret */
 while (true) {
-  var secret = readlineSync.question("provide the secret: ");
+  let secret = readlineSync.question("provide the secret: ");
   break;
 }
 console.log("Secret provided and hashed. Keep the secret safe.");
 
 const h_sha3 = crypto.createHash(HASH_ALGO);
-var digest = h_sha3.update(secret).digest("hex");
+let digest = h_sha3.update(secret).digest("hex");
 
 /* check for valid ECOC address*/
 if (!utils.ecoc_valid_addr(recievers_addr, process.env.CHAIN_MODE)) {
@@ -66,7 +66,7 @@ utils
   /* check if wallet holds enough balance */
   .then(
     utils.ecoc_wallet_info().then(wallet_info => {
-      var wallet_balance = wallet_info.balance;
+      let wallet_balance = wallet_info.balance;
       if (wallet_balance <= ecoc_amount) {
         console.log(
           "Not enough ECOC. Wallet balance is " + wallet_balance + " ECOC"

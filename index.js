@@ -30,7 +30,7 @@ ecoc_utils.isConnected().then(results => {
   console.log("connected to ecochain node: " + results);
 });
 
-var height;
+let height;
 
 ecoc_utils.getBlockCount().then(results  => {
     height = results;

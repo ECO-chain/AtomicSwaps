@@ -38,7 +38,7 @@ async function isConnected() {
 
 
 function hex_to_ecoc_addr(hex_addr, net = ECOC.NET) {
-  var ecoAdress = hex_addr;
+  let ecoAdress = hex_addr;
   // Add network byte
   if (net == "mainnet") {
     ecoAdress = "21" + ecoAdress;
@@ -85,21 +85,21 @@ function is_valid_addr(address, net = "mainnet") {
   }
 
   /* decode from base58 */
-  var bytes_addr = bs58.decode(address);
+  let bytes_addr = bs58.decode(address);
   /* remove last 4 bytes */
-  var checksum = Buffer.alloc(4);
+  let checksum = Buffer.alloc(4);
   bytes_addr.copy(checksum, 0, bytes_addr.length - 4);
   checksum = Buffer.from(checksum, "hex").toString();
-  var bytes_nochecksum = Buffer.alloc(bytes_addr.length - 4);
+  let bytes_nochecksum = Buffer.alloc(bytes_addr.length - 4);
   bytes_addr.copy(bytes_nochecksum, 0, 0, bytes_addr.length - 4);
   /* two times hash256*/
   const h1_sha256 = crypto.createHash("sha256");
   const h2_sha256 = crypto.createHash("sha256");
-  var first_hash = h1_sha256.update(bytes_nochecksum).digest("");
+  let first_hash = h1_sha256.update(bytes_nochecksum).digest("");
   first_hash.copy(first_hash, 0, 0, first_hash.length - 4);
-  var second_hash = h2_sha256.update(first_hash).digest("");
-  var second_hash_buff = Buffer.from(second_hash);
-  var final_checksum = Buffer.alloc(4);
+  let second_hash = h2_sha256.update(first_hash).digest("");
+  let second_hash_buff = Buffer.from(second_hash);
+  let final_checksum = Buffer.alloc(4);
   second_hash_buff.copy(final_checksum, 0, 0, 4);
   /* compar the 4 checksum bytes with
    * the last 4 bytes after the hashing*/

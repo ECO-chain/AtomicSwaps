@@ -154,7 +154,7 @@ const contract_abi = [
 
 const contract = ecocw3.Contract(ECOC.CONTRACT_ADDR, contract_abi);
 async function call_check(atomic_swap_ID) {
-  var params = {
+  let params = {
     methodArgs: [atomic_swap_ID],
     senderAddress: ECOC.ADDR
   };
@@ -191,7 +191,7 @@ async function send_open(
   gas_limit = 250000,
   gas_price = 0.0000004
 ) {
-  var params = {
+  let params = {
     methodArgs: [atomic_swap_ID, receiver_addr, SHA3_hash, block_timelock],
     amount: ecoc_amount,
     gasLimit: gas_limit,
@@ -202,14 +202,13 @@ async function send_open(
   return await contract.send("open", params);
 }
 
-
 async function send_close(
   atomic_swap_ID,
   secret,
   gas_limit = 250000,
   gas_price = 0.0000004
 ) {
-  var params = {
+  let params = {
     methodArgs: [atomic_swap_ID, secret],
     amount: 0 , /* no ECOC to send*/
     gasLimit: gas_limit,
