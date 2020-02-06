@@ -23,15 +23,19 @@ async function isConnected() {
   return await eth_web3.eth.net.isListening();
 }
 
+async function isValidAddr(address) {
+  return await eth_web3.utils.isAddress(address);
+}
+
 module.exports = {
   getBlockHeight: getBlockHeight,
-  isConnected: isConnected
+  isConnected: isConnected,
+  ethValidAddr: isValidAddr
   /* todo :
     getHexAddress: getHexAddress,
     fromHexAddress: fromHexAddress, 
     hex_to_eth_addr: hex_to_eth_addr,
-    hex2Buffer: hex2Buffer,
-    eth_valid_addr: is_valid_addr,
+    hex2Buffer: hex2Buffer,    
     eth_wallet_info : getWalletInfo
     */
 };
