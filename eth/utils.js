@@ -27,15 +27,26 @@ async function isValidAddr(address) {
   return await eth_web3.utils.isAddress(address);
 }
 
+async function _getWalletInfo(address) {
+  return await eth_web3.eth.getBalance(address);
+}
+
+async function getWalletBalance(address) {
+  return await _getWalletInfo(address).then(results => {
+    let balance = eth_web3.utils.fromWei(results);
+    return balance;
+  });
+}
+
 module.exports = {
   getBlockHeight: getBlockHeight,
   isConnected: isConnected,
-  ethValidAddr: isValidAddr
+  ethValidAddr: isValidAddr,
+  ethWalletBalance: getWalletBalance
   /* todo :
     getHexAddress: getHexAddress,
     fromHexAddress: fromHexAddress, 
     hex_to_eth_addr: hex_to_eth_addr,
-    hex2Buffer: hex2Buffer,    
-    eth_wallet_info : getWalletInfo
+    hex2Buffer: hex2Buffer,        
     */
 };

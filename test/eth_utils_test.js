@@ -55,3 +55,24 @@ describe("ETH utilis tests", function() {
     });
   });
 });
+
+context("check wallet balance in ETH", function() {
+  it("should be equal", async function() {
+    let expected_balance = 1.4;
+    utils
+      .ethWalletBalance(process.env.ETH_ADDR)
+      .then(results => {
+        let wallet_balance = results;
+        assert.equal(wallet_balance, expected_balance);
+      })
+      .catch(error => {
+        console.log("wallet balance test did not pass!");
+        console.log(
+          "wallet balance is " +
+            error.actual +
+            " but expected value is " +
+            expected_balance
+        );
+      });
+  });
+});
