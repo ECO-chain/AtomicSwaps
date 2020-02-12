@@ -50,6 +50,27 @@ async function getBlockHeight(base = "hex") {
     });
 }
 
+async function getNonce(addr = ETH.ADDR, block = "latest") {
+  let config = {
+    headers: HEADERS
+  };
+  let data = {
+    jsonrpc: "2.0",
+    method: "eth_getTransactionCount",
+    params: [addr, block],
+    id: 1
+  };
+  return await axios
+    .post(ETH.ENDPOINT, data, config)
+    .then(response => {
+      return response.data.result;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
 module.exports = {
-  infuraCurrentHeight: getBlockHeight
+  infuraCurrentHeight: getBlockHeight,
+  infuraGetNonce: getNonce,
 };

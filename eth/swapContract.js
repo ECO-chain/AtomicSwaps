@@ -1,6 +1,8 @@
 require("dotenv").config({ path: "../.env" });
 const utils = require("./utils.js");
 const Web3 = require("web3");
+const GAS_LIMIT = 250000;
+const GAS_PRICE = 0.0000004;
 
 const ETH = {
   ADDR: process.env.ETH_ADDR,
@@ -193,8 +195,8 @@ async function send_open(
   SHA3_hash,
   block_timelock,
   eth_amount,
-  gas_limit = 250000,
-  gas_price = 0.0000004
+  gas_limit = GAS_LIMIT,
+  gas_price = GAS_PRICE
 ) {
   let params = {
     methodArgs: [atomic_swap_ID, receiver_addr, SHA3_hash, block_timelock],
@@ -204,14 +206,26 @@ async function send_open(
     senderAddress: ETH.ADDR
   };
 
-  return await contract.send("open", params);
+  console.log(params);
+
+  return await contract.methods
+  .open(atomic_swap_ID, receiver_addr, SHA3_hash, block_timelock)
+  .send({from: ETH.ADDR, value:web3.utils.toWei(eth_amount, "ether")})
+  .then(function(receipt){
+    console.log(receipt);
+    return receipt;
+})
+.catch( error => {
+  console.log(error);
+})
+;
 }
 
 async function send_close(
   atomic_swap_ID,
   secret,
-  gas_limit = 250000,
-  gas_price = 0.0000004
+  gas_limit = GAS_LIMIT,
+  gas_price = GAS_PRICE
 ) {
   let params = {
     methodArgs: [atomic_swap_ID, secret],
