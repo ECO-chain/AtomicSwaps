@@ -2,10 +2,14 @@ require("dotenv").config({ path: "../.env" });
 const createHash = require("create-hash");
 const crypto = require("crypto");
 const Web3 = require("web3");
+const Tx = require('ethereumjs-tx');
+const GAS_LIMIT = 250000;
+const GAS_PRICE = 0.0000004;
 
 const ETH = {
   ADDR: process.env.ETH_ADDR,
-  PRIV_KEY: process.env.ETH_PRIV_KEY
+  PRIV_KEY: process.env.ETH_PRIV_KEY,
+  RECEIVERS_ADDR: process.env.ETH_RECEIVER_ADDR
 };
 
 const INFURA = {
@@ -38,15 +42,33 @@ async function getWalletBalance(address) {
   });
 }
 
+async function signRawTransaction(nonce, eth_amount, data, to_addr=ETH.RECEIVERS_ADDR) {
+  let priv_key = new Buffer(ETH.PRIV_KEY,'hex');
+  let params = {
+    nonce: nonce.toString(16),
+    gasPrice: GAS_PRICE.toString(16),
+    gasLimit: GAS_LIMIT.toString(16),
+    to: to_addr,
+    value: eth_amount.toString(16),
+    data: data
+  }
+let rawTx = new Tx(params);
+rawTx.sign(priv_key);
+let serializedData = rawTx.serialize();
+
+return await infura.SendRawTransaction(serializedData)
+.then( results => {
+  return results;
+  })
+.catch(error => {
+  console.log(error);
+})
+}
+
 module.exports = {
   getBlockHeight: getBlockHeight,
   isConnected: isConnected,
   ethValidAddr: isValidAddr,
-  ethWalletBalance: getWalletBalance
-  /* todo :
-    getHexAddress: getHexAddress,
-    fromHexAddress: fromHexAddress, 
-    hex_to_eth_addr: hex_to_eth_addr,
-    hex2Buffer: hex2Buffer,        
-    */
+  ethWalletBalance: getWalletBalance,
+  ethSignRawTransaction : signRawTransaction,
 };

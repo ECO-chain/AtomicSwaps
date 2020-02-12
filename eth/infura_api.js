@@ -70,7 +70,28 @@ async function getNonce(addr = ETH.ADDR, block = "latest") {
     });
 }
 
+async function sendRawTransaction(serialized_data) {
+  let config = {
+    headers: HEADERS
+  };
+  let data = {
+    jsonrpc: "2.0",
+    method: "eth_sendRawTransaction",
+    params: [serialized_data],
+    id: 1
+  };
+  return await axios
+    .post(ETH.ENDPOINT, data, config)
+    .then(response => {
+      return response.data.result;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
 module.exports = {
-  infuraCurrentHeight: getBlockHeight,
-  infuraGetNonce: getNonce,
+  CurrentHeight: getBlockHeight,
+  GetNonce: getNonce,
+  SendRawTransaction: sendRawTransaction,
 };
