@@ -167,17 +167,16 @@ async function call_check(atomic_swap_ID) {
       return results;
     });
 }
-/*
+
 function wrap_call_check(atomic_swap_ID) {
   call_check(atomic_swap_ID)
     .then(results => {
       r = {
-        timelock: results.executionResult.formattedOutput.timelock,
-        value: results.executionResult.formattedOutput.value,
-        receiverAddress: results.executionResult.formattedOutput.receiverAddress
-        ),
-        HA3Hash: Buffer.from(results.executionResult.formattedOutput.SHA3Hash,'hex').toString(),
-        secretKey: results.executionResult.formattedOutput.secretKey
+        timelock: results.timelock,
+        value: results.value,
+        receiverAddress: results.receiverAddress,
+        SHA3Hash: Buffer.from(results.SHA3Hash,'hex').toString(),
+        secretKey: results.secretKey
       };
       console.log(r);
         return r;
@@ -187,6 +186,7 @@ function wrap_call_check(atomic_swap_ID) {
     });
 }
 
+/*
 async function send_open(
   atomic_swap_ID,
   receiver_addr,
@@ -227,5 +227,5 @@ async function send_close(
 module.exports = {
   // eth_open_swap: send_open,
   // eth_close_swap: send_close,
-  // eth_check_swap: wrap_call_check
+ eth_check_swap: wrap_call_check
 };
