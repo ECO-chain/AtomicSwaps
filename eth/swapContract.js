@@ -1,6 +1,6 @@
 require("dotenv").config({ path: "../.env" });
 const utils = require("./utils.js");
-const Web3  = require("web3");
+const Web3 = require("web3");
 
 const ETH = {
   ADDR: process.env.ETH_ADDR,
@@ -11,11 +11,11 @@ const ETH = {
   CONTRACT_ADDR: process.env.ETH_SMARTCONTRACT,
   RECEIVERS_ADDR: process.env.ETH_RECEIVER_ADDR
 };
-if (ETH.NET=='Testnet') {
-ETH.ENDPOINT= 'https://ropsten.'+ETH.ENDPOINT
+if (ETH.NET == "Testnet") {
+  ETH.ENDPOINT = "https://ropsten." + ETH.ENDPOINT;
 } else {
-  ETH.ENDPOINT= 'https://'+ETH.ENDPOINT
-};
+  ETH.ENDPOINT = "https://" + ETH.ENDPOINT;
+}
 
 const web3 = new Web3(ETH.ENDPOINT);
 
@@ -152,17 +152,21 @@ const contract_abi = [
   }
 ];
 
-const contract = web3.eth.Contract(contract_abi, ETH.CONTRACT_ADDR,);
+const contract = new web3.eth.Contract(contract_abi, ETH.CONTRACT_ADDR);
 
 async function call_check(atomic_swap_ID) {
   let params = {
     methodArgs: [atomic_swap_ID],
     senderAddress: ETH.ADDR
   };
-  //return await contract.call("check", params);
-  /* create the method and call the contract*/
-}
 
+  return await contract.methods
+    .check(atomic_swap_ID)
+    .call()
+    .then(results => {
+      return results;
+    });
+}
 /*
 function wrap_call_check(atomic_swap_ID) {
   call_check(atomic_swap_ID)
@@ -221,7 +225,7 @@ async function send_close(
 }
 */
 module.exports = {
-  eth_open_swap : send_open,
-  eth_close_swap : send_close,
-  eth_check_swap : wrap_call_check,
+  // eth_open_swap: send_open,
+  // eth_close_swap: send_close,
+  // eth_check_swap: wrap_call_check
 };
