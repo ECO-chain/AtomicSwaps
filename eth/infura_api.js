@@ -83,6 +83,7 @@ async function sendRawTransaction(serialized_data) {
   return await axios
     .post(ETH.ENDPOINT, data, config)
     .then(response => {
+      console.log('sendRawTransaction() called')
       return response.data;
     })
     .catch(error => {

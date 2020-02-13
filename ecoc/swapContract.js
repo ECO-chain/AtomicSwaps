@@ -1,5 +1,5 @@
 require("dotenv").config({ path: "../.env" });
-const utils = require("./utils.js");
+const utils = require("./utils");
 
 const { Ecocw3 } = require("ecoweb3");
 const ECOC = {

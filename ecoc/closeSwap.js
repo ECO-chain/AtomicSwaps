@@ -1,4 +1,4 @@
-const contract = require("./swapContract.js");
+const contract = require("./swapContract");
 
 let swap_id = process.argv[2];
 let secret = process.argv[3];

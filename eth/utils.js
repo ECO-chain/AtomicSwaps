@@ -1,5 +1,5 @@
 require("dotenv").config({ path: "../.env" });
-const infura_api = require("./infura_api.js");
+const infura_api = require("./infura_api");
 const createHash = require("create-hash");
 const crypto = require("crypto");
 const Web3 = require("web3");
@@ -26,7 +26,7 @@ async function getCurrentGasPrice() {
       return results;
     })
     .catch(error => {
-      console.log(error);
+      console.error(error);
     });
 }
 
@@ -64,7 +64,6 @@ async function signRawTransaction(
     .GetGasPrice()
     .then(gas_price => {
       let params = {
-        nonce: nonce.toString(16),
         gasPrice: gas_price,
         gasLimit: "0x" + GAS_LIMIT.toString(16),
         to: to_addr,
@@ -74,10 +73,18 @@ async function signRawTransaction(
       return params;
     })
     .catch(error => {
-      console.log(error);
+      console.error(error);
     })
-    .then(params => {
-      // console.log(params);
+    .then ( params => {
+    infura_api.GetNonce()
+  .then ( nonce => {
+    params.nonce = nonce;
+    return params;
+   console.log(params);
+    process.exit()
+  })
+})
+.then(params => {
       let rawTx = new Tx(params);
       rawTx.sign(priv_key);
       let serializedData = rawTx.serialize();

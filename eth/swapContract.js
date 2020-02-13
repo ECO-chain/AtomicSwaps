@@ -1,8 +1,8 @@
 require("dotenv").config({ path: "../.env" });
-const utils = require("./utils.js");
+const utils = require("./utils");
+const infura_api = require("./infura_api");
 const Web3 = require("web3");
 const GAS_LIMIT = 250000;
-const GAS_PRICE = 0.0000004;
 
 const ETH = {
   ADDR: process.env.ETH_ADDR,
@@ -184,30 +184,44 @@ function wrap_call_check(atomic_swap_ID) {
         return r;
     })
     .catch(error => {
-      console.log(error);
+      console.error(error);
     });
 }
 
-/*
 async function send_open(
   atomic_swap_ID,
   receiver_addr,
   SHA3_hash,
   block_timelock,
   eth_amount,
-  gas_limit = GAS_LIMIT,
-  gas_price = GAS_PRICE
+  gas_limit = GAS_LIMIT
 ) {
-  let params = {
-    methodArgs: [atomic_swap_ID, receiver_addr, SHA3_hash, block_timelock],
-    amount: eth_amount,
-    gasLimit: gas_limit,
-    gasPrice: gas_price,
-    senderAddress: ETH.ADDR
-  };
+return await infura_api.GetNonce()
+  .then ( nonce => {
+    return nonce;
+  })
+  .catch(error => {
+    console.error(error)
+  })
+.then( nonce => {
+  atomic_swap_ID = web3.utils.fromAscii(atomic_swap_ID);
+  let payload = contract.methods.open(atomic_swap_ID, receiver_addr,SHA3_hash,block_timelock).encodeABI();
+  return utils.ethSignRawTransaction(
+    nonce,
+    eth_amount ,
+    payload,  //hexdata
+    receiver_addr
+  )
+  .then (results => {
+    return results;
+  })
+  .catch(error => {
+    console.error(error)
+  })
 
-  console.log(params);
+  });
 
+process.exit();
   return await contract.methods
   .open(atomic_swap_ID, receiver_addr, SHA3_hash, block_timelock)
   .send({from: ETH.ADDR, value:web3.utils.toWei(eth_amount, "ether")})
@@ -220,7 +234,7 @@ async function send_open(
 })
 ;
 }
-
+/*
 async function send_close(
   atomic_swap_ID,
   secret,
@@ -239,7 +253,7 @@ async function send_close(
 }
 */
 module.exports = {
-  // eth_open_swap: send_open,
+  eth_open_swap: send_open,
   // eth_close_swap: send_close,
  eth_check_swap: wrap_call_check
 };
