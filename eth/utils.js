@@ -1,10 +1,9 @@
 require("dotenv").config({ path: "../.env" });
+const infura_api = require("./infura_api.js");
 const createHash = require("create-hash");
 const crypto = require("crypto");
 const Web3 = require("web3");
-const Tx = require('ethereumjs-tx');
-const GAS_LIMIT = 250000;
-const GAS_PRICE = 0.0000004;
+const Tx = require("ethereumjs-tx").Transaction;
 
 const ETH = {
   ADDR: process.env.ETH_ADDR,
@@ -18,6 +17,18 @@ const INFURA = {
 };
 
 const eth_web3 = new Web3(new Web3.providers.HttpProvider(INFURA.ENDPOINT));
+const GAS_LIMIT = 250000;
+
+async function getCurrentGasPrice() {
+  return await infura_api
+    .GetGasPrice()
+    .then(results => {
+      return results;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
 
 async function getBlockHeight() {
   return await eth_web3.eth.getBlockNumber();
@@ -42,27 +53,36 @@ async function getWalletBalance(address) {
   });
 }
 
-async function signRawTransaction(nonce, eth_amount, data, to_addr=ETH.RECEIVERS_ADDR) {
-  let priv_key = new Buffer(ETH.PRIV_KEY,'hex');
-  let params = {
-    nonce: nonce.toString(16),
-    gasPrice: GAS_PRICE.toString(16),
-    gasLimit: GAS_LIMIT.toString(16),
-    to: to_addr,
-    value: eth_amount.toString(16),
-    data: data
-  }
-let rawTx = new Tx(params);
-rawTx.sign(priv_key);
-let serializedData = rawTx.serialize();
-
-return await infura.SendRawTransaction(serializedData)
-.then( results => {
-  return results;
-  })
-.catch(error => {
-  console.log(error);
-})
+async function signRawTransaction(
+  nonce,
+  eth_amount,
+  data,
+  to_addr = ETH.RECEIVERS_ADDR
+) {
+  let priv_key = Buffer.from(ETH.PRIV_KEY, "hex");
+  return await infura_api
+    .GetGasPrice()
+    .then(gas_price => {
+      let params = {
+        nonce: nonce.toString(16),
+        gasPrice: gas_price,
+        gasLimit: "0x" + GAS_LIMIT.toString(16),
+        to: to_addr,
+        value: "0x" + eth_web3.utils.toWei(eth_amount, "ether"),
+        data: data
+      };
+      return params;
+    })
+    .catch(error => {
+      console.log(error);
+    })
+    .then(params => {
+      // console.log(params);
+      let rawTx = new Tx(params);
+      rawTx.sign(priv_key);
+      let serializedData = rawTx.serialize();
+      return infura_api.SendRawTransaction(serializedData);
+    });
 }
 
 module.exports = {
@@ -70,5 +90,5 @@ module.exports = {
   isConnected: isConnected,
   ethValidAddr: isValidAddr,
   ethWalletBalance: getWalletBalance,
-  ethSignRawTransaction : signRawTransaction,
+  ethSignRawTransaction: signRawTransaction
 };
