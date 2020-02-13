@@ -83,6 +83,26 @@ async function sendRawTransaction(serialized_data) {
   return await axios
     .post(ETH.ENDPOINT, data, config)
     .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+async function getGasPrice() {
+  let config = {
+    headers: HEADERS
+  };
+  let data = {
+    jsonrpc: "2.0",
+    method: "eth_gasPrice",
+    params: [],
+    id: 1
+  };
+  return await axios
+    .post(ETH.ENDPOINT, data, config)
+    .then(response => {
       return response.data.result;
     })
     .catch(error => {
@@ -90,8 +110,10 @@ async function sendRawTransaction(serialized_data) {
     });
 }
 
+
 module.exports = {
   CurrentHeight: getBlockHeight,
   GetNonce: getNonce,
   SendRawTransaction: sendRawTransaction,
+  GetGasPrice : getGasPrice
 };
