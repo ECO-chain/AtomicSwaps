@@ -12,7 +12,7 @@ block_lock = '123456'
 eth_amount= '0.00005'
 swap.eth_open_swap(swap_id,process.env.ETH_RECEIVER_ADDR,sha3Hash,block_lock,eth_amount)
 .then( results => {
-  console.log(results);
+  console.log('tx: '+results.result);
 })
 .catch(error => {
 console.log(error);

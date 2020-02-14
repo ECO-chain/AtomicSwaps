@@ -213,7 +213,7 @@ return await infura_api.GetNonce()
     nonce,
     eth_amount ,
     payload,  //hexdata
-    receiver_addr
+    ETH.CONTRACT_ADDR
   )
   .then (results => {
     return results;
@@ -223,19 +223,6 @@ return await infura_api.GetNonce()
   })
 
   });
-
-process.exit();
-  return await contract.methods
-  .open(atomic_swap_ID, receiver_addr, SHA3_hash, block_timelock)
-  .send({from: ETH.ADDR, value:web3.utils.toWei(eth_amount, "ether")})
-  .then(function(receipt){
-    console.log(receipt);
-    return receipt;
-})
-.catch( error => {
-  console.log(error);
-})
-;
 }
 /*
 async function send_close(

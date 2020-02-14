@@ -8,7 +8,8 @@ const Tx = require("ethereumjs-tx").Transaction;
 const ETH = {
   ADDR: process.env.ETH_ADDR,
   PRIV_KEY: process.env.ETH_PRIV_KEY,
-  RECEIVERS_ADDR: process.env.ETH_RECEIVER_ADDR
+  RECEIVERS_ADDR: process.env.ETH_RECEIVER_ADDR,
+  SMARTCONTRACT: process.env.ETH_SMARTCONTRACT
 };
 
 const INFURA = {
@@ -57,7 +58,7 @@ async function signRawTransaction(
   nonce,
   eth_amount,
   data,
-  to_addr = ETH.RECEIVERS_ADDR
+  to_addr
 ) {
   return await infura_api
     .GetGasPrice()
@@ -74,21 +75,25 @@ async function signRawTransaction(
     .catch(error => {
       console.error(error);
     })
-    .then ( params => {
-    return infura_api.GetNonce()
-  .then ( nonce => {
-    params.nonce = nonce;
-    return params;
-  })
-})
-.then(params => {
-  let priv_key = Buffer.from(ETH.PRIV_KEY, "hex");
-  console.log('before signing: '+JSON.stringify(params))
-      let rawTx = new Tx(params);
+    .then(params => {
+      return infura_api.GetNonce().then(nonce => {
+        params.nonce = nonce;
+        return params;
+      });
+    })
+    .then(params => {
+      let priv_key = Buffer.from(ETH.PRIV_KEY, "hex");
+      if (process.env.CHAIN_MODE=='Testnet') {
+        var chain_name='ropsten';
+      } else {  
+        var chain_name='mainnet';
+      }
+      let rawTx = new Tx(params, { chain: chain_name });
       rawTx.sign(priv_key);
-      console.log('after signing: '+JSON.stringify(rawTx))
       let serializedData = rawTx.serialize();
-      return infura_api.SendRawTransaction('0x'+serializedData.toString('hex'));
+      return infura_api.SendRawTransaction(
+        "0x" + serializedData.toString("hex")
+      );
     });
 }
 
