@@ -59,7 +59,6 @@ async function signRawTransaction(
   data,
   to_addr = ETH.RECEIVERS_ADDR
 ) {
-  let priv_key = Buffer.from(ETH.PRIV_KEY, "hex");
   return await infura_api
     .GetGasPrice()
     .then(gas_price => {
@@ -76,19 +75,20 @@ async function signRawTransaction(
       console.error(error);
     })
     .then ( params => {
-    infura_api.GetNonce()
+    return infura_api.GetNonce()
   .then ( nonce => {
     params.nonce = nonce;
     return params;
-   console.log(params);
-    process.exit()
   })
 })
 .then(params => {
+  let priv_key = Buffer.from(ETH.PRIV_KEY, "hex");
+  console.log('before signing: '+JSON.stringify(params))
       let rawTx = new Tx(params);
       rawTx.sign(priv_key);
+      console.log('after signing: '+JSON.stringify(rawTx))
       let serializedData = rawTx.serialize();
-      return infura_api.SendRawTransaction(serializedData);
+      return infura_api.SendRawTransaction('0x'+serializedData.toString('hex'));
     });
 }
 
