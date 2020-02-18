@@ -224,13 +224,18 @@ return await infura_api.GetNonce()
 
   });
 }
-/*
+
 async function send_close(
   atomic_swap_ID,
   secret,
   gas_limit = GAS_LIMIT,
-  gas_price = GAS_PRICE
 ) {
+  /* get gas price*/
+  /* compute payload */
+  /* ethSignRawTransaction()*/
+  /* return results*/
+
+  /*
   let params = {
     methodArgs: [atomic_swap_ID, secret],
     amount: 0 ,
@@ -240,10 +245,11 @@ async function send_close(
   };
 
   return await contract.send("close", params);
+  */
 }
-*/
+
 module.exports = {
   eth_open_swap: send_open,
-  // eth_close_swap: send_close,
- eth_check_swap: wrap_call_check
+  eth_close_swap: send_close,
+  eth_check_swap: wrap_call_check
 };
