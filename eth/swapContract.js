@@ -171,13 +171,14 @@ async function call_check(atomic_swap_ID) {
 }
 
 function wrap_call_check(atomic_swap_ID) {
+  atomic_swap_ID = Web3.utils.numberToHex(atomic_swap_ID);
   call_check(atomic_swap_ID)
     .then(results => {
       r = {
         timelock: results.timelock,
-        value: results.value,
+        ETH_amount: Web3.utils.fromWei(results.value, "ether"),
         receiverAddress: results.receiverAddress,
-        SHA3Hash: Buffer.from(results.SHA3Hash,'hex').toString(),
+        SHA3Hash: results.SHA3Hash,
         secretKey: results.secretKey
       };
       console.log(r);
