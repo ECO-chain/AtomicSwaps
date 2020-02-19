@@ -110,8 +110,28 @@ async function getGasPrice() {
     });
 }
 
+async function getBalance(addr, block='latest') {
+  let config = {
+    headers: HEADERS
+  };
+  let data = {
+    jsonrpc: "2.0",
+    method: "eth_getBalance",
+    params: [addr, block],
+    id: 1
+  };
+  return await axios
+    .post(ETH.ENDPOINT, data, config)
+    .then(response => {
+      return response.data.result;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
 
 module.exports = {
+  GetBalance: getBalance,
   CurrentHeight: getBlockHeight,
   GetNonce: getNonce,
   SendRawTransaction: sendRawTransaction,

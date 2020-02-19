@@ -43,12 +43,9 @@ async function isValidAddr(address) {
   return await eth_web3.utils.isAddress(address);
 }
 
-async function _getWalletInfo(address) {
-  return await eth_web3.eth.getBalance(address);
-}
-
-async function getWalletBalance(address) {
-  return await _getWalletInfo(address).then(results => {
+async function getWalletBalance(address, block='latest') {
+  return await infura_api.GetBalance(address, block)
+  .then(results => {
     let balance = eth_web3.utils.fromWei(results);
     return balance;
   });

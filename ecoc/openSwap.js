@@ -18,12 +18,14 @@ if (process.argv.length < 6) {
   console.log(
     "openSwap <swap id> <reciever's address> <ECOC amount> <block height timelock> <gas limit(optional)> <gas price(price)>"
   );
-
 }
-console.log(typeof(ecoc_amount))
+console.log(typeof ecoc_amount);
 /* input blocking to get the secret */
 while (true) {
   let secret = readlineSync.question("provide the secret: ");
+  if (secret == "") {
+    continue;
+  }
   break;
 }
 console.log("Secret provided and hashed. Keep the secret safe.");
@@ -81,7 +83,8 @@ utils
   })
   .then(
     /* open the swap */
-    contract.ecoc_open_swap(
+    contract
+      .ecoc_open_swap(
         swap_id,
         recievers_addr,
         digest,
