@@ -26,7 +26,7 @@ if (process.argv.length < 6) {
 let secret;
 while (true) {
   secret = readlineSync.question("provide the secret: ");
-  if (secret=='') {
+  if (secret == "") {
     continue;
   }
   break;
@@ -37,65 +37,68 @@ const h_sha3 = crypto.createHash(HASH_ALGO);
 let digest = h_sha3.update(secret).digest("hex");
 
 /* check for valid ETH address*/
-utils.ethValidAddr(recievers_addr).then( results => {
-  if(!results) {
-  console.log("Wrong reciever's ethereum address. Check the address and net mode.");
-  process.exit();
-  }
-  else {
-  /* check for reasonable block timelock*/
-  infura_api.CurrentHeight(base='decimal')
-  .then(blockheight => {    
-    const MIN_BLOCK = parseInt(process.env.ETH_MIN_BLOCK_LOCK);
-    if (block_timelock <= blockheight + MIN_BLOCK) {
-      console.log(
-        "For security reasons, please set block time higher than " +
-          (blockheight + MIN_BLOCK) +
-          " (current block " +
-          blockheight +
-          "+" +
-          MIN_BLOCK +
-          ")"
-      );
-      process.exit();
-    }
-  })
-  .catch(error => {
-    console.log(error);
+utils.ethValidAddr(recievers_addr).then(results => {
+  if (!results) {
+    console.log(
+      "Wrong reciever's ethereum address. Check the address and net mode."
+    );
     process.exit();
-  })
-  .then(results => {
-    /* check if wallet holds enough balance */
-    utils.ethWalletBalance(process.env.ETH_ADDR)
-    .then ( balance => {
-      if (balance < eth_amount) {
-        console.log('Balance '+balance+' is not enough');
+  } else {
+    /* check for reasonable block timelock*/
+    infura_api
+      .CurrentHeight((base = "decimal"))
+      .then(blockheight => {
+        const MIN_BLOCK = parseInt(process.env.ETH_MIN_BLOCK_LOCK);
+        if (block_timelock <= blockheight + MIN_BLOCK) {
+          console.log(
+            "For security reasons, please set block time higher than " +
+              (blockheight + MIN_BLOCK) +
+              " (current block " +
+              blockheight +
+              "+" +
+              MIN_BLOCK +
+              ")"
+          );
+          process.exit();
+        }
+      })
+      .catch(error => {
+        console.log(error);
         process.exit();
-      } 
-    })
-    .catch(error => {
-      console.log(error);
-      process.exit();
-    })
-    .then  ( v => {
-      console.log('Opening the swap:')
-      ethAmount = eth_amount.toString();
-      return contract.eth_open_swap(
-        swap_id,
-        recievers_addr,
-        digest,
-        block_timelock,
-        ethAmount,
-      )
-    })
-    .catch(error => {
-      console.log(error);
-      process.exit();
-    })
-    .then ( results => {
-      console.log(results)
-    })
-
-  })
+      })
+      .then(() => {
+        /* check if wallet holds enough balance */
+        utils
+          .ethWalletBalance(process.env.ETH_ADDR)
+          .then(balance => {
+            if (balance < eth_amount) {
+              console.log("Balance " + balance + " is not enough");
+              process.exit();
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            process.exit();
+          })
+          .then(() => {
+            console.log("Opening the swap:");
+            ethAmount = eth_amount.toString();
+            swapID = parseInt(swap_id);
+            return contract.eth_open_swap(
+              swapID,
+              recievers_addr,
+              digest,
+              block_timelock,
+              ethAmount
+            );
+          })
+          .catch(error => {
+            console.log(error);
+            process.exit();
+          })
+          .then(results => {
+            console.log(results);
+          });
+      });
   }
 });

@@ -204,9 +204,9 @@ return await infura_api.GetNonce()
     console.error(error)
   })
 .then( nonce => {
-  atomic_swap_ID = web3.utils.fromAscii(atomic_swap_ID);
+  atomic_swap_ID = web3.utils.numberToHex(atomic_swap_ID);
   SHA3_hash = '0x'+SHA3_hash
-  block_timelock = web3.utils.asciiToHex(block_timelock);
+  block_timelock = web3.utils.numberToHex(block_timelock);
 
   let payload = contract.methods.open(atomic_swap_ID, receiver_addr,SHA3_hash,block_timelock).encodeABI();
   return utils.ethSignRawTransaction(
