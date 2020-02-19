@@ -9,7 +9,7 @@ const DEFAULT_GAS_LIMIT = 250000;
 const DEFAULT_GAS_PRICE = 0.0000004;
 const swap_id = process.argv[2];
 const recievers_addr = process.argv[3];
-const eth_amount = parseFloat(process.argv[4]);
+const eth_amount = process.argv[4];
 const block_timelock = parseInt(process.argv[5]);
 const gas_limit = process.argv[6] || DEFAULT_GAS_LIMIT;
 const gas_price = process.argv[7] || DEFAULT_GAS_PRICE;
@@ -71,7 +71,7 @@ utils.ethValidAddr(recievers_addr).then(results => {
         utils
           .ethWalletBalance(process.env.ETH_ADDR)
           .then(balance => {
-            if (balance < eth_amount) {
+            if (balance < parseFloat(eth_amount)) {
               console.log("Balance " + balance + " is not enough");
               process.exit();
             }
@@ -82,14 +82,13 @@ utils.ethValidAddr(recievers_addr).then(results => {
           })
           .then(() => {
             console.log("Opening the swap:");
-            ethAmount = eth_amount.toString();
             swapID = parseInt(swap_id);
             return contract.eth_open_swap(
               swapID,
               recievers_addr,
               digest,
               block_timelock,
-              ethAmount
+              eth_amount
             );
           })
           .catch(error => {

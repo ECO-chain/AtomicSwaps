@@ -64,7 +64,7 @@ async function signRawTransaction(
         gasPrice: gas_price,
         gasLimit: "0x" + GAS_LIMIT.toString(16),
         to: to_addr,
-        value: "0x" + eth_web3.utils.toWei(eth_amount, "ether"),
+        value: "0x" + parseInt(eth_web3.utils.toWei(eth_amount, "ether")).toString(16),
         data: data
       };
       return params;
