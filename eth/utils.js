@@ -43,20 +43,14 @@ async function isValidAddr(address) {
   return await eth_web3.utils.isAddress(address);
 }
 
-async function getWalletBalance(address, block='latest') {
-  return await infura_api.GetBalance(address, block)
-  .then(results => {
+async function getWalletBalance(address, block = "latest") {
+  return await infura_api.GetBalance(address, block).then(results => {
     let balance = eth_web3.utils.fromWei(results);
     return balance;
   });
 }
 
-async function signRawTransaction(
-  nonce,
-  eth_amount,
-  data,
-  to_addr
-) {
+async function signRawTransaction(nonce, eth_amount, data, to_addr) {
   return await infura_api
     .GetGasPrice()
     .then(gas_price => {
@@ -64,7 +58,9 @@ async function signRawTransaction(
         gasPrice: gas_price,
         gasLimit: "0x" + GAS_LIMIT.toString(16),
         to: to_addr,
-        value: "0x" + parseInt(eth_web3.utils.toWei(eth_amount, "ether")).toString(16),
+        value:
+          "0x" +
+          parseInt(eth_web3.utils.toWei(eth_amount, "ether")).toString(16),
         data: data
       };
       return params;
@@ -80,10 +76,10 @@ async function signRawTransaction(
     })
     .then(params => {
       let priv_key = Buffer.from(ETH.PRIV_KEY, "hex");
-      if (process.env.CHAIN_MODE=='Testnet') {
-        var chain_name='ropsten';
-      } else {  
-        var chain_name='mainnet';
+      if (process.env.CHAIN_MODE == "Testnet") {
+        var chain_name = "ropsten";
+      } else {
+        var chain_name = "mainnet";
       }
       let rawTx = new Tx(params, { chain: chain_name });
       rawTx.sign(priv_key);

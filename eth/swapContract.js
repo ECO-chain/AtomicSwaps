@@ -170,9 +170,9 @@ async function call_check(atomic_swap_ID) {
     });
 }
 
-function wrap_call_check(atomic_swap_ID) {
+async function wrap_call_check(atomic_swap_ID) {
   atomic_swap_ID = Web3.utils.numberToHex(atomic_swap_ID);
-  call_check(atomic_swap_ID)
+  return await call_check(atomic_swap_ID)
     .then(results => {
       r = {
         timelock: results.timelock,
@@ -182,7 +182,7 @@ function wrap_call_check(atomic_swap_ID) {
         secretKey: results.secretKey
       };
       console.log(r);
-        return r;
+      return results;
     })
     .catch(error => {
       console.error(error);
@@ -197,56 +197,65 @@ async function send_open(
   eth_amount,
   gas_limit = GAS_LIMIT
 ) {
-return await infura_api.GetNonce()
-  .then ( nonce => {
-    return nonce;
-  })
-  .catch(error => {
-    console.error(error)
-  })
-.then( nonce => {
-  atomic_swap_ID = web3.utils.numberToHex(atomic_swap_ID);
-  SHA3_hash = '0x'+SHA3_hash
-  block_timelock = web3.utils.numberToHex(block_timelock);
+  return await infura_api
+    .GetNonce()
+    .then(nonce => {
+      return nonce;
+    })
+    .catch(error => {
+      console.error(error);
+    })
+    .then(nonce => {
+      atomic_swap_ID = web3.utils.numberToHex(atomic_swap_ID);
+      SHA3_hash = "0x" + SHA3_hash;
+      block_timelock = web3.utils.numberToHex(block_timelock);
 
-  let payload = contract.methods.open(atomic_swap_ID, receiver_addr,SHA3_hash,block_timelock).encodeABI();
-  return utils.ethSignRawTransaction(
-    nonce,
-    eth_amount ,
-    payload,  //hexdata
-    ETH.CONTRACT_ADDR
-  )
-  .then (results => {
-    return results;
-  })
-  .catch(error => {
-    console.error(error)
-  })
-
-  });
+      let payload = contract.methods
+        .open(atomic_swap_ID, receiver_addr, SHA3_hash, block_timelock)
+        .encodeABI();
+      return utils
+        .ethSignRawTransaction(
+          nonce,
+          eth_amount,
+          payload, //hexdata
+          ETH.CONTRACT_ADDR
+        )
+        .then(results => {
+          return results;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
 }
 
-async function send_close(
-  atomic_swap_ID,
-  secret,
-  gas_limit = GAS_LIMIT,
-) {
-  /* get gas price*/
-  /* compute payload */
-  /* ethSignRawTransaction()*/
-  /* return results*/
-
-  /*
-  let params = {
-    methodArgs: [atomic_swap_ID, secret],
-    amount: 0 ,
-    gasLimit: gas_limit,
-    gasPrice: gas_price,
-    senderAddress: ETH.ADDR
-  };
-
-  return await contract.send("close", params);
-  */
+async function send_close(atomic_swap_ID, secret, gas_limit = GAS_LIMIT) {
+  return await infura_api
+    .GetNonce()
+    .then(nonce => {
+      return nonce;
+    })
+    .catch(error => {
+      console.error(error);
+    })
+    .then(nonce => {
+      atomic_swap_ID = web3.utils.numberToHex(atomic_swap_ID);
+      secret = web3.utils.asciiToHex(secret);
+      let payload = contract.methods.close(atomic_swap_ID, secret).encodeABI();
+      return utils
+        .ethSignRawTransaction(
+          nonce,
+          "0",
+          payload, //hexdata
+          ETH.CONTRACT_ADDR
+        )
+        .then(results => {
+          return results;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
 }
 
 module.exports = {
