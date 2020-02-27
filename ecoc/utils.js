@@ -1,3 +1,9 @@
+/**
+ * @file Utils for ecoc atomic swaps
+ * @author ECOCHAIN developers
+ */
+
+
 require("dotenv").config({ path: "../.env" });
 const createHash = require("create-hash");
 const bs58 = require("bs58");
@@ -12,30 +18,53 @@ const ECOC = {
 };
 const ecocw3 = Ecocw3.Rpc(ECOC.ENDPOINT);
 
+/**
+ * Async function. No input params
+ * Returns the block height
+ *  @returns {number} block height
+ */
 async function getBlockCount() {
   return await ecocw3.getBlockCount();
 }
 
+/**
+ * Async function. No input params
+ * Checks if connection to the node is established
+ *  @returns {boolean} true if connected, otherwise false
+ */
 async function isConnected() {
   return await ecocw3.isConnected();
 }
+
+/**
+ * Async function.
+ * Converts string to hex
+ * @param {string} - the address to be converted to string
+ *  @returns {number} address in hex format 
+ */
 
 async function getHexAddress(addr) {
   return await ecocw3.getHexAddress(addr);
 }
 
+/**
+ * Async function.
+ * Converts hex to string
+ * @param {number} - the address to be converted to hex
+ *  @returns {string} string address 
+ */
 async function fromHexAddress(addr) {
   return await ecocw3.fromHexAddress(addr);
 }
 
-async function getWalletInfo(addr) {
-  return await ecocw3.getWalletInfo(addr);
+/**
+ * Async function. No input params
+ * get the wallet info
+ *  @returns {object} returns the wallet info
+ */
+async function getWalletInfo() {
+  return await ecocw3.getWalletInfo();
 }
-
-async function isConnected() {
-  return await ecocw3.isConnected();
-}
-
 
 function hex_to_ecoc_addr(hex_addr, net = ECOC.NET) {
   let ecoAdress = hex_addr;
