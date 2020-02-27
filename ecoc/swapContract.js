@@ -162,19 +162,22 @@ async function call_check(atomic_swap_ID) {
 }
 
 /* wrapper example */
-function wrap_call_check(atomic_swap_ID) {
-  call_check(atomic_swap_ID)
+async function wrap_call_check(atomic_swap_ID) {
+  return await call_check(atomic_swap_ID)
     .then(results => {
+      /* check fon non existing swap */
+      if (results.executionResult.formattedOutput.SHA3Hash==0) {
+        return false ;
+      }
       r = {
         timelock: results.executionResult.formattedOutput.timelock,
         value: results.executionResult.formattedOutput.value,
         receiverAddress: utils.hex_to_ecoc_addr(
           results.executionResult.formattedOutput.receiverAddress
         ),
-        HA3Hash: Buffer.from(results.executionResult.formattedOutput.SHA3Hash,'hex').toString(),
+        SHA3Hash: Buffer.from(results.executionResult.formattedOutput.SHA3Hash,'hex').toString(),
         secretKey: results.executionResult.formattedOutput.secretKey
       };
-      console.log(r);
         return r;
     })
     .catch(error => {
