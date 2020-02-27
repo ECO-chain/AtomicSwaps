@@ -15,14 +15,14 @@ const gas_price = process.argv[7] || DEFAULT_GAS_PRICE;
 
 if (process.argv.length < 6) {
   console.log("Wrong syntax. Usage is : ");
-  console.log(
-    "openSwap <swap id> <reciever's address> <ECOC amount> <block height timelock> <gas limit(optional)> <gas price(price)>"
-  );
+  console.log("openSwap <swap id> <reciever's address> <ECOC amount> <block height timelock> <gas limit(optional)> <gas price(price)>");
+    process.exit();
 }
-console.log(typeof ecoc_amount);
+
+let secret;
 /* input blocking to get the secret */
 while (true) {
-  let secret = readlineSync.question("provide the secret: ");
+  secret = readlineSync.question("provide the secret: ");
   if (secret == "") {
     continue;
   }

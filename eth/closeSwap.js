@@ -22,12 +22,10 @@ contract.eth_check_swap(swap_id)
     console.log('Secret is wrong. Save your gas until you know the secret.')
     process.exit()
   }
-  
 })
 .catch(error => {
   console.log(error);
 });
-
 
 /* call the close() function */
 contract.eth_close_swap(swap_id, secret)
