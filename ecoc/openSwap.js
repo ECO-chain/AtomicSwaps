@@ -1,3 +1,14 @@
+/**
+ * @file openSwap - opens the swap
+ * @arg - swap_id:  the id of the swap
+ * @arg - ECOC public address: reciever's public address of the asset (ECOC)
+ * @arg - ECOC amount: amount in ECOC
+ * @arg - block height timelock: the blockheight , after which the sender can take his assets back if they are not claimed 
+ * @arg - gas limit: optional
+ * @arg - gas price: optional
+ * @author ECOCHAIN developers
+ */
+
 const crypto = require("crypto");
 const contract = require("./swapContract");
 const utils = require("./utils");
@@ -15,7 +26,7 @@ const gas_price = process.argv[7] || DEFAULT_GAS_PRICE;
 
 if (process.argv.length < 6) {
   console.log("Wrong syntax. Usage is : ");
-  console.log("openSwap <swap id> <reciever's address> <ECOC amount> <block height timelock> <gas limit(optional)> <gas price(price)>");
+  console.log("openSwap <swap id> <reciever's address> <ECOC amount> <block height timelock> <gas limit(optional)> <gas price(optional)>");
     process.exit();
 }
 
