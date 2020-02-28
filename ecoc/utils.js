@@ -66,6 +66,13 @@ async function getWalletInfo() {
   return await ecocw3.getWalletInfo();
 }
 
+/**
+ * Not an async function.
+ * Converts hex to ECO public address
+ * @param {string} - hex string (before base58 encode)
+ * @param {string} - chain mode (testnet,mainnet)
+ *  @returns {number} address in hex format
+ */
 function hex_to_ecoc_addr(hex_addr, net = ECOC.NET) {
   let ecoAdress = hex_addr;
   // Add network byte
@@ -93,6 +100,12 @@ function hex_to_ecoc_addr(hex_addr, net = ECOC.NET) {
   return address;
 }
 
+/**
+ * Not an async function.
+ * Converts hes string to buffer (binary array)
+ * @param {string} - hex string
+ *  @returns {buffer} - returns byte array
+ */
 function hex2Buffer(hexString) {
   const buffer = [];
   let i;
@@ -103,6 +116,13 @@ function hex2Buffer(hexString) {
   return Buffer.from(buffer);
 }
 
+/**
+ * Not an async function.
+ * Checkis if  ECO address is valid
+ * @param {string} - ECO public address
+ * @param {string} - chain mode (testnet,mainnet)
+ *  @returns {boolean} - true if valid, else false
+ */
 function is_valid_addr(address, net = "mainnet") {
   if (net.toLowerCase() == "testnet") {
     characteristic = "e";
