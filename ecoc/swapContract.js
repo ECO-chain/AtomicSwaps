@@ -161,7 +161,14 @@ async function call_check(atomic_swap_ID) {
   return await contract.call("check", params);
 }
 
-/* wrapper example */
+
+/**
+ * Async function
+ * Reads the state of a swap
+ * @param {string} - id of swap
+ * @returns {object} - returns a Promise of an object which holds the state of the swap
+ * Returned object: { timelock, value, receiverAddress, SHA3Hash, secretKey }
+ */
 async function wrap_call_check(atomic_swap_ID) {
   return await call_check(atomic_swap_ID)
     .then(results => {
@@ -185,6 +192,19 @@ async function wrap_call_check(atomic_swap_ID) {
     });
 }
 
+/**
+ * Async function
+ * Opens a swap
+ * @param {string} - id of swap
+ * @param {string} - reciever's public address of the asset
+ * @param {string} - hash of the secret (SHA3-256 ago)
+ * @param {string} - minimum block height that the sender can claim the asset back ("lock")
+ * @param {string} - amount of the asset in ECOC
+ * @param {number} - gas limit (optional, default is 250000)
+ * @param {number} - gas price (optional, default is 0.0000004)
+ * @returns {object} - returns a Promise of an object which holds the result of the transaction
+ * Returned object: { txid, sender, hash160, args:{ contractAddress, amount, gasLimit, gasPrice}}
+ */
 async function send_open(
   atomic_swap_ID,
   receiver_addr,
@@ -205,6 +225,16 @@ async function send_open(
   return await contract.send("open", params);
 }
 
+/**
+ * Async function
+ * Closes a swap
+ * @param {string} - id of swap
+ * @param {string} - the secret. The caller can get the secret from the other chain
+ * @param {number} - gas limit (optional, default is 250000)
+ * @param {number} - gas price (optional, default is 0.0000004)
+ * @returns {object} - returns a Promise of an object which holds the result of the transaction
+ * Returned object: { txid, sender, hash160, args:{ contractAddress, amount, gasLimit, gasPrice}}
+ */
 async function send_close(
   atomic_swap_ID,
   secret,
