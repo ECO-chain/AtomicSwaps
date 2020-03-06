@@ -17,7 +17,7 @@ const gas_price = process.argv[7] || DEFAULT_GAS_PRICE;
 if (process.argv.length < 6) {
   console.log("Wrong syntax. Usage is : ");
   console.log(
-    "openSwap <swap id> <reciever's address> <ETH amount> <block height timelock> <gas limit(optional)> <gas price(price)>"
+    "openSwap <swap id> <reciever's address> <ETH amount> <block height timelock> <gas limit(optional)> <gas price(optional)>"
   );
   process.exit();
 }

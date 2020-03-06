@@ -170,6 +170,13 @@ async function call_check(atomic_swap_ID) {
     });
 }
 
+/**
+ * Asynchronous function
+ * Reads the state for the swap
+ * @param {string} atomic_swap_id - atomic swap id
+ * @returns {object} - returns an object {timelock, ETH_amount, receiverAddress, SHA3Hash, secretKey}
+ * if secretkey is null then swap is still open
+ */
 async function wrap_call_check(atomic_swap_ID) {
   atomic_swap_ID = Web3.utils.numberToHex(atomic_swap_ID);
   return await call_check(atomic_swap_ID)
@@ -189,6 +196,18 @@ async function wrap_call_check(atomic_swap_ID) {
     });
 }
 
+/**
+ * Asynchronous function
+ * Open a new swap with specific id
+ * @param {string} atomic_swap_id - atomic swap id
+ * @param {string} receiver_addr - public address of the beneficiary of the asset
+ * @param {string} SHA3_hash - the hash of teh secret
+ * @param {string} block_timelock - minimum block height that the sender can claim his asset back
+ * @param {string} eth_amount - amount in ETH
+ * @param {string} gas_limit - (optional) the gas limit of teh transaction
+ * @returns {object} - returns an object of the resulted transaction 
+ * {jsonrpc, id , result} result is the tx id if succesfull
+ */
 async function send_open(
   atomic_swap_ID,
   receiver_addr,
@@ -229,6 +248,15 @@ async function send_open(
     });
 }
 
+/**
+ * Asynchronous function
+ * Open a new swap with specific id
+ * @param {string} atomic_swap_ID - atomic swap id
+ * @param {string} secret - the secret message, hashed value must match the stored in blockchain
+ * @param {string} gas_limit - (optional) the gas limit of teh transaction
+ * @returns {object} - returns an object of the resulted transaction 
+ * {jsonrpc, id , result} result is the tx id if succesfull
+ */
 async function send_close(atomic_swap_ID, secret, gas_limit = GAS_LIMIT) {
   return await infura_api
     .GetNonce()
