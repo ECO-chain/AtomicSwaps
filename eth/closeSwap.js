@@ -1,3 +1,10 @@
+/**
+ * @file closeSwap - closes the swap
+ * @arg - swap_id:  the id of the swap
+ * @arg - secret:  the secret
+ * @author ECOCHAIN developers
+ */
+
 const contract = require("./swapContract");
 const crypto_utils = require("../utils/crypto");
 

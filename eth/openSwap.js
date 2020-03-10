@@ -1,3 +1,14 @@
+/**
+ * @file openSwap - opens the swap
+ * @arg - swap_id:  the id of the swap
+ * @arg - ETH public address: reciever's public address of the asset (ETH)
+ * @arg - ETH amount: amount in ETH
+ * @arg - block height timelock: the blockheight , after which the sender can take his assets back if they are not claimed 
+ * @arg - gas limit: optional
+ * @arg - gas price: optional
+ * @author ECOCHAIN developers
+ */
+
 const crypto = require("crypto");
 const contract = require("./swapContract");
 const utils = require("./utils");
