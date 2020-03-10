@@ -20,6 +20,11 @@ const INFURA = {
 const eth_web3 = new Web3(new Web3.providers.HttpProvider(INFURA.ENDPOINT));
 const GAS_LIMIT = 250000;
 
+/**
+ * Async function. No input params
+ * Returns the current gas price
+ *  @returns {number} gas price in wei
+ */
 async function getCurrentGasPrice() {
   return await infura_api
     .GetGasPrice()
@@ -31,18 +36,41 @@ async function getCurrentGasPrice() {
     });
 }
 
+/**
+ * Async function. No input params
+ * Returns the block height
+ *  @returns {number} block height
+ */
 async function getBlockHeight() {
   return await eth_web3.eth.getBlockNumber();
 }
 
+/**
+ * Async function. No input params
+ * Check if there is connection to the API
+ *  @returns {boolean} - true if connected, else false
+ */
 async function isConnected() {
   return await eth_web3.eth.net.isListening();
 }
 
+/**
+ * Async function
+ * Check if public address is correct
+ * @param address - public address to be checked
+ *  @returns {boolean} - true if the adress is correct, else false
+ */
 async function isValidAddr(address) {
   return await eth_web3.utils.isAddress(address);
 }
 
+/**
+ * Async function
+ * Gets the address balance
+ * @param address - public address to be checked
+ * @param block - block height, the latest by default
+ *  @returns {number} - the balance in wei
+ */
 async function getWalletBalance(address, block = "latest") {
   return await infura_api.GetBalance(address, block).then(results => {
     let balance = eth_web3.utils.fromWei(results);
@@ -50,7 +78,16 @@ async function getWalletBalance(address, block = "latest") {
   });
 }
 
-async function signRawTransaction(nonce, eth_amount, data, to_addr) {
+/**
+ * Async function
+ * Signs a raw transaction. The private key must be already set in .env
+ * @param {string} eth_amount - amount of ETH
+ * @param {string} data - the payload of the transaction (method of smart contract encoded)
+ * @param {string} to_addr - receiver's public address 
+ * @returns {object} - returns an object of the resulted transaction 
+ * {jsonrpc, id , result} result is the tx id if succesfull
+ */
+async function signRawTransaction(eth_amount, data, to_addr) {
   return await infura_api
     .GetGasPrice()
     .then(gas_price => {
@@ -91,6 +128,7 @@ async function signRawTransaction(nonce, eth_amount, data, to_addr) {
 }
 
 module.exports = {
+  getCurrentGasPrice : getCurrentGasPrice,
   getBlockHeight: getBlockHeight,
   isConnected: isConnected,
   ethValidAddr: isValidAddr,
