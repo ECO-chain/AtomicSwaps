@@ -20,6 +20,12 @@ const HEADERS = {
   "Content-Type": "application/json"
 };
 
+/**
+ * Asynchronous function
+ * Gets the block height of the ethereum network
+ * @param {string} base - hex or decimal. By default is set to "hex"
+ * @returns {number} - returns the block height or response status on error
+ */
 async function getBlockHeight(base = "hex") {
   let config = {
     headers: HEADERS
@@ -41,7 +47,7 @@ async function getBlockHeight(base = "hex") {
         }
         return msg;
       } else {
-        msg = "Server returned status " + response.status;
+        msg = response.status;
         return msg;
       }
     })
@@ -50,6 +56,13 @@ async function getBlockHeight(base = "hex") {
     });
 }
 
+/**
+ * Asynchronous function
+ * Gets the nounce of the block for the spesific public address
+ * @param {string} addr - the ETH public address
+ * @param {string} block - block number, by default the latest
+ * @returns {string} - returns the nounce
+ */
 async function getNonce(addr = ETH.ADDR, block = "latest") {
   let config = {
     headers: HEADERS
@@ -70,6 +83,13 @@ async function getNonce(addr = ETH.ADDR, block = "latest") {
     });
 }
 
+/**
+ * Asynchronous function
+ * Signs a raw transaction if the data are already serialized
+ * @param {string} serialized_data - ready serialized data for the tx
+ * @returns {object} - returns an object of the resulted transaction 
+ * {jsonrpc, id , result} result is the tx id if succesfull
+ */
 async function sendRawTransaction(serialized_data) {
   let config = {
     headers: HEADERS
@@ -90,6 +110,11 @@ async function sendRawTransaction(serialized_data) {
     });
 }
 
+/**
+ * Asynchronous function
+ * Gets the current gas price of the ethereum network
+ * @returns {number} - returns the gas price
+ */
 async function getGasPrice() {
   let config = {
     headers: HEADERS
@@ -110,6 +135,13 @@ async function getGasPrice() {
     });
 }
 
+/**
+ * Asynchronous function
+ * Gets the balance of the ETH public addr at a specific block
+ * @param {string} addr - the ETH public address
+ * @param {string} block - block number, by default the latest
+ * @returns {string} - returns the balance in wei
+ */
 async function getBalance(addr, block='latest') {
   let config = {
     headers: HEADERS
