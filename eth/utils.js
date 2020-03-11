@@ -87,7 +87,7 @@ async function getWalletBalance(address, block = "latest") {
  * @returns {object} - returns an object of the resulted transaction 
  * {jsonrpc, id , result} result is the tx id if succesfull
  */
-async function signRawTransaction(eth_amount, data, to_addr) {
+async function signRawTransaction(nonce, eth_amount, data, to_addr) {
   return await infura_api
     .GetGasPrice()
     .then(gas_price => {
