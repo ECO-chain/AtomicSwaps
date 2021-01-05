@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/ECO-chain/AtomicSwaps#readme",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "ecoweb3": "^1.1.0-rc1",
     "readline-sync": "^1.4.10",
